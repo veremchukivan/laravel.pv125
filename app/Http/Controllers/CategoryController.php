@@ -1,17 +1,14 @@
 <?php
 
-
 namespace App\Http\Controllers;
-
 
 use App\Models\Category;
 use Validator;
 use Illuminate\Http\Request;
 
-
 class CategoryController extends Controller
 {
-    /**
+     /**
      * @OA\Get(
      *     tags={"Category"},
      *     path="/api/category",
@@ -24,7 +21,6 @@ class CategoryController extends Controller
             ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 
-
     /**
      * @OA\Get(
      *     tags={"Category"},
@@ -32,7 +28,7 @@ class CategoryController extends Controller
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="Ідентифікатор категорії",
+     *         description="Category id",
      *         required=true,
      *         @OA\Schema(
      *             type="number",
@@ -45,7 +41,7 @@ class CategoryController extends Controller
      *    response=404,
      *    description="Wrong id",
      *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Sorry, wrong Category Id has been sent. Pls try another one.")
+     *       @OA\Property(property="message", type="string", example="Wrong category id")
      *        )
      *     )
      * )
@@ -56,43 +52,43 @@ class CategoryController extends Controller
             ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 
-
     /**
-     * @OA\Post(
-     *     tags={"Category"},
-     *     path="/api/category",
-     *     @OA\RequestBody(
-     *         @OA\MediaType(
-     *             mediaType="multipart/form-data",
-     *             @OA\Schema(
-     *                 required={"name","image","description"},
-     *                 @OA\Property(
-     *                     property="image",
-     *                     type="string"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="name",
-     *                     type="string"
-     *                 ),
-     *                 @OA\Property(
-     *                     property="description",
-     *                     type="string"
-     *                 )
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(response="200", description="Add Category.")
-     * )
-     */
+    * @OA\Post(
+    *     tags={"Category"},
+    *     path="/api/category",
+    *     @OA\RequestBody(
+    *         @OA\MediaType(
+    *             mediaType="multipart/form-data",
+    *             @OA\Schema(
+    *                 required={"name", "image", "description"},
+    *                 @OA\Property(
+    *                     property="image",
+    *                     type="string"
+    *                 ),
+    *                 @OA\Property(
+    *                     property="name",
+    *                     type="string"
+    *                 ),
+    *                 @OA\Property(
+    *                     property="description",
+    *                     type="string"
+    *                 )
+    *             )
+    *         )
+    *     ),
+    *     @OA\Response(response="200", description="Add Category.")
+    * )
+    */
     public function store(Request $request) {
         $input = $request->all();
         $message = array(
-            'name.required'=>"Вкажіть назву категорії",
-            'image.required'=>"Вкажіть фото категорії",
-            'description.required'=>"Вкажіть опис категорії",
+            'name.unique' => "Name must be unique",
+            'name.required'=>"Name is required",
+            'image.required'=>"Image is required",
+            'description.required'=>"Description is required",
         );
         $validator = Validator::make($input,[
-            'name'=>'required',
+            'name' => 'required|unique:categories',
             'image'=>'required',
             'description'=>'required'
         ], $message);
@@ -105,7 +101,6 @@ class CategoryController extends Controller
             ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 
-
     /**
      * @OA\Post(
      *     tags={"Category"},
@@ -113,7 +108,6 @@ class CategoryController extends Controller
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="Ідентифікатор категорії",
      *         required=true,
      *         @OA\Schema(
      *             type="number",
@@ -142,61 +136,63 @@ class CategoryController extends Controller
      *     ),
      *     @OA\Response(response="200", description="Add Category.")
      * )
-     */
-    public function update($id, Request $request) {
+    */
+    public function update($id, Request $request)
+    {
         $category = Category::findOrFail($id);
         $input = $request->all();
         $message = array(
-            'name.required'=>"Вкажіть назву категорії",
-            'image.required'=>"Вкажіть фото категорії",
-            'description.required'=>"Вкажіть опис категорії",
+            'name.unique' => "Name must be unique",
+            'name.required' => "Name is required",
+            'image.required' => "Image is required",
+            'description.required' => "Description is required",
         );
-        $validator = Validator::make($input,[
-            'name'=>'required',
-            'image'=>'required',
-            'description'=>'required'
+        $validator = Validator::make($input, [
+            'id' => 'required|exists:categories',
+            'name' => 'required|unique:categories,name,' . $input['id'],
+            'image' => 'required',
+            'description' => 'required'
         ], $message);
-        if($validator->fails()) {
-            return response()->json($validator->errors(), 400,
-                ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
         }
+
         $category->update($input);
-        return response()->json($category, 200,
-            ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
+        return response()->json($category, 200, ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 
-
     /**
-     * @OA\Delete(
-     *     path="/api/category/{id}",
-     *     tags={"Category"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="Ідентифікатор категорії",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="number",
-     *             format="int64"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Успішне видалення категорії"
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Категорії не знайдено"
-     *     ),
-     *     @OA\Response(
-     *         response=401,
-     *         description="Не авторизований"
-     *     )
-     * )
-     */
-    public function delete(Request $request, $id) {
+    * @OA\Delete(
+    *     path="/api/category/{id}",
+    *     tags={"Category"},
+    *     @OA\Parameter(
+    *         name="id",
+    *         in="path",
+    *         required=true,
+    *         @OA\Schema(
+    *             type="number",
+    *             format="int64"
+    *         )
+    *     ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Category deleted"
+    *     ),
+    *     @OA\Response(
+    *         response=404,
+    *         description="Category not found"
+    *     ),
+    *     @OA\Response(
+    *         response=401,
+    *         description="Not authorized"
+    *     )
+    * )
+    */
+    public function delete($id)
+    {
         $category = Category::findOrFail($id);
         $category->delete();
-        return 204;
+        return response()->json(null, 204);
     }
 }

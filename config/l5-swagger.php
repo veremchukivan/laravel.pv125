@@ -5,7 +5,7 @@ return [
     'documentations' => [
         'default' => [
             'api' => [
-                'title' => 'Наша група PV125',
+                'title' => 'L5 Swagger UI',
             ],
 
             'routes' => [
@@ -209,6 +209,7 @@ return [
                         'read',
                         'write'
                     ],
+
                     'passport' => []
                     */
                 ],
