@@ -35,16 +35,14 @@
                         "multipart/form-data": {
                             "schema": {
                                 "required": [
-                                    "name",
-                                    "image",
-                                    "description"
+                                    "name"
                                 ],
                                 "properties": {
-                                    "image": {
-                                        "type": "string"
-                                    },
                                     "name": {
                                         "type": "string"
+                                    },
+                                    "image": {
+                                        "type": "file"
                                     },
                                     "description": {
                                         "type": "string"
@@ -72,7 +70,7 @@
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Category id",
+                        "description": "Ідентифікатор категорії",
                         "required": true,
                         "schema": {
                             "type": "number",
@@ -85,53 +83,10 @@
                         "description": "List Categories."
                     },
                     "404": {
-                        "description": "Wrong id",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Wrong category id"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            },
-            "delete": {
-                "tags": [
-                    "Category"
-                ],
-                "operationId": "d2437e8e0e200592efe7305af1c302d7",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "number",
-                            "format": "int64"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Category deleted"
-                    },
-                    "404": {
-                        "description": "Category not found"
+                        "description": "Категорії не знайдено"
                     },
                     "401": {
-                        "description": "Not authorized"
+                        "description": "Не авторизований"
                     }
                 }
             }
@@ -146,6 +101,7 @@
                     {
                         "name": "id",
                         "in": "path",
+                        "description": "Ідентифікатор категорії",
                         "required": true,
                         "schema": {
                             "type": "number",
@@ -162,7 +118,7 @@
                                 ],
                                 "properties": {
                                     "image": {
-                                        "type": "string"
+                                        "type": "file"
                                     },
                                     "name": {
                                         "type": "string"
@@ -183,124 +139,17 @@
                 }
             }
         },
-        "/api/product": {
-            "get": {
-                "tags": [
-                    "Product"
-                ],
-                "operationId": "5cc57bec35d0f2045983cc8dcd00eccd",
-                "responses": {
-                    "200": {
-                        "description": "List Products."
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Product"
-                ],
-                "operationId": "1d0b0d8724685b7b8f9d87f403bfc4df",
-                "requestBody": {
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "required": [
-                                    "category_id",
-                                    "name",
-                                    "price",
-                                    "description"
-                                ],
-                                "properties": {
-                                    "category_id": {
-                                        "type": "integer"
-                                    },
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "price": {
-                                        "type": "number",
-                                        "format": "float"
-                                    },
-                                    "description": {
-                                        "type": "string"
-                                    },
-                                    "images": {
-                                        "type": "array",
-                                        "items": {
-                                            "properties": {
-                                                "name": {
-                                                    "type": "string"
-                                                },
-                                                "priority": {
-                                                    "type": "integer"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Add Product."
-                    }
-                }
-            }
-        },
-        "/api/product/{id}": {
-            "get": {
-                "tags": [
-                    "Product"
-                ],
-                "operationId": "0847d7d2b6de240f2532a6a0a28060a8",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Product id",
-                        "required": true,
-                        "schema": {
-                            "type": "number",
-                            "format": "int64"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Get Product."
-                    },
-                    "404": {
-                        "description": "Product not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Product not found"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
+        "/api/category/delete/{id}": {
             "delete": {
                 "tags": [
-                    "Product"
+                    "Category"
                 ],
-                "operationId": "c830155516bad1f72b0081160edeb2ac",
+                "operationId": "177ca7c6efc6f8228b4883c4770ada7d",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Product id",
+                        "description": "Ідентифікатор категорії",
                         "required": true,
                         "schema": {
                             "type": "number",
@@ -308,96 +157,15 @@
                         }
                     }
                 ],
-                "responses": {
-                    "204": {
-                        "description": "Delete Product."
-                    },
-                    "404": {
-                        "description": "Product not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Product not found"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/product/edit/{id}": {
-            "post": {
-                "tags": [
-                    "Product"
-                ],
-                "operationId": "6846909ff7036fa168f6ff283230a18c",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "number",
-                            "format": "int64"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "required": [
-                                    "category_id",
-                                    "name",
-                                    "price",
-                                    "description"
-                                ],
-                                "properties": {
-                                    "category_id": {
-                                        "type": "integer"
-                                    },
-                                    "name": {
-                                        "type": "string"
-                                    },
-                                    "price": {
-                                        "type": "number",
-                                        "format": "float"
-                                    },
-                                    "description": {
-                                        "type": "string"
-                                    },
-                                    "images": {
-                                        "type": "array",
-                                        "items": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer"
-                                                },
-                                                "name": {
-                                                    "type": "string"
-                                                },
-                                                "priority": {
-                                                    "type": "integer"
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "200": {
-                        "description": "Update Product."
+                        "description": "Успішне видалення категорії"
+                    },
+                    "404": {
+                        "description": "Категорії не знайдено"
+                    },
+                    "401": {
+                        "description": "Не авторизований"
                     }
                 }
             }
